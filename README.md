@@ -50,7 +50,10 @@ Google Gemini API
 🔹 Other Tools
 Multer (File Upload Handling)
 JWT (Authentication)
+
 ### 📁 Project Structure
+
+```bash
 ATS-Resume_Analyzer/
 │
 ├── backend/
