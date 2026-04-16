@@ -1,4 +1,4 @@
-#🚀 ATS Resume Analyzer
+# 🚀 ATS Resume Analyzer
 
 ## AI-Powered Resume Screening & Optimization Platform
 
@@ -6,32 +6,32 @@ An intelligent full-stack web application that evaluates how well a resume match
 
 Designed to simulate real-world hiring filters, this tool helps job seekers optimize resumes, improve keyword matching, and increase interview chances.
 
-###🌟 Key Features
+### 🌟 Key Features
 
-####✨ User Authentication
+#### ✨ User Authentication
 
 Secure registration & login (JWT-based authentication)
 Protected routes for authorized access
 
-###📄 Resume Processing
+### 📄 Resume Processing
 
 Upload PDF resumes
 Automatic text extraction
 
-###📊 ATS Compatibility Score
+### 📊 ATS Compatibility Score
 
 Compares resume with job description
 Keyword-based scoring system
 Real-time analysis feedback
 
-###🤖 AI-Powered Insights (Google Gemini API)
+### 🤖 AI-Powered Insights (Google Gemini API)
 
 Missing skills detection
 Resume bullet point improvements
 Interview preparation tips
 Actionable content suggestions
 
-###💾 Persistent Storage
+### 💾 Persistent Storage
 
 Lightweight and efficient SQLite database
 Stores user and resume data locally
@@ -50,7 +50,7 @@ Google Gemini API
 🔹 Other Tools
 Multer (File Upload Handling)
 JWT (Authentication)
-###📁 Project Structure
+### 📁 Project Structure
 ATS-Resume_Analyzer/
 │
 ├── backend/
@@ -68,7 +68,7 @@ ATS-Resume_Analyzer/
     ├── src/
     ├── package.json
     └── vite.config.js
-###⚙️ Prerequisites
+### ⚙️ Prerequisites
 Node.js (v18+)
 npm (v9+)
 Internet connection (for Gemini API)
@@ -85,7 +85,7 @@ SQLITE_PATH=./data/resume-analyzer.sqlite
 JWT_SECRET=your_jwt_secret_here
 GEMINI_API_KEY=your_gemini_api_key_here
 
-###⚠️ Important Notes
+### ⚠️ Important Notes
 
 Never commit .env file to GitHub
 Keep your API keys secure
@@ -95,7 +95,7 @@ cd backend/backend
 npm install
 npm start
 
-###Backend runs at:
+### Backend runs at:
 👉 http://localhost:5000
 
 2️⃣ Start Frontend
@@ -106,7 +106,7 @@ npm run dev
 Frontend runs at:
 👉 http://localhost:5173
 
-###💡 How It Works
+### 💡 How It Works
 Register/Login into the system
 Upload your resume (PDF format)
 Paste a job description (minimum 20 words)
@@ -164,12 +164,12 @@ HR tech experimentation
 This project is intended for educational and portfolio use.
 You can add an MIT License if publishing publicly.
 
-###👨‍💻 Author
+### 👨‍💻 Author
 
 Nikhil Shingade
 Passionate about AI, Data Science & Full-Stack Development
 
-###⭐ Support
+### ⭐ Support
 
 If you found this project useful:
 
