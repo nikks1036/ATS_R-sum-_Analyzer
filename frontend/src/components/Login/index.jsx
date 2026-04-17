@@ -19,41 +19,48 @@ const Login = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault()
-    setLoading(true)
-    setError("")
-    const url = "http://localhost:5000/auth/login";
+    event.preventDefault();
+    setLoading(true);
+    setError("");
+
+    // ✅ UPDATED BACKEND URL
+    const url = "https://ats-r-sum-analyzer.onrender.com/auth/login";
+
     const userDetails = {
       email,
       password
-    }
-  
+    };
+
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(userDetails)
-    }
+    };
+
     try {
-      const response = await fetch(url, options)
-      const data = await response.json()
-      console.log(data)
+      const response = await fetch(url, options);
+      const data = await response.json();
+      console.log(data);
 
       if (response.ok) {
         localStorage.setItem("token", data.token);
+
         if (data.user) {
           localStorage.setItem("user", JSON.stringify(data.user));
         } else {
           localStorage.removeItem("user");
         }
+
         window.dispatchEvent(new Event("auth-changed"));
         navigate("/");
       } else {
         setError(data.message || "Login failed");
       }
     } catch (_err) {
-      setError("Unable to reach server. Check backend is running on http://localhost:5000");
+      // ✅ UPDATED ERROR MESSAGE
+      setError("Unable to reach server. Please try again later.");
     } finally {
       setLoading(false);
     }
