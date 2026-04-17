@@ -1,39 +1,3 @@
-// // import { Navigate } from "react-router-dom";
-
-// // const ProtectedRoute = ({ children }) => {
-// //   const token = localStorage.getItem("token");
-
-// //   if (!token) {
-// //     return <Navigate to="/login" replace />;
-// //   }
-
-// //   return children;
-// // };
-
-// // export default ProtectedRoute;
-// // ...existing code...
-// import { useNavigate } from "react-router-dom";
-// import "./index.css";
-
-// const Navbar = () => {
-//   const navigate = useNavigate();
-//   const handleLogout = () => {
-//     localStorage.removeItem("token");
-//     navigate("/login");
-//   };
-
-//   return (
-//     <div className="navbar">
-//       <div>Resume ATS Analyzer</div>
-//       <div>
-//         <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-//         <button onClick={handleLogout}>Logout</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Navbar;
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./index.css";
@@ -69,16 +33,13 @@ const Navbar = () => {
       }
     };
 
-    const onStorage = () => syncAuth();
-    const onAuthChanged = () => syncAuth();
-
-    window.addEventListener("storage", onStorage);
-    window.addEventListener("auth-changed", onAuthChanged);
+    window.addEventListener("storage", syncAuth);
+    window.addEventListener("auth-changed", syncAuth);
     syncAuth();
 
     return () => {
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener("auth-changed", onAuthChanged);
+      window.removeEventListener("storage", syncAuth);
+      window.removeEventListener("auth-changed", syncAuth);
     };
   }, []);
 
@@ -87,18 +48,20 @@ const Navbar = () => {
 
     const fetchMe = async () => {
       try {
-        const response = await fetch("http://localhost:5000/auth/me", {
+        // ✅ FIXED BACKEND URL
+        const response = await fetch("https://ats-r-sum-analyzer.onrender.com/auth/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
 
         if (!response.ok) return;
         const data = await response.json();
+
         if (data?.user) {
           localStorage.setItem("user", JSON.stringify(data.user));
           setUser(data.user);
         }
       } catch {
-        // fail silently; we still have local user data fallback
+        // silent fail
       }
     };
 
@@ -135,7 +98,7 @@ const Navbar = () => {
       <div className="navbar-actions">
         {token ? (
           <>
-            <div className="account-chip" title={user?.email || "Logged in user"}>
+            <div className="account-chip">
               <span className="account-name">{user?.name || "My Account"}</span>
               <span className="account-email">{user?.email || "Signed in"}</span>
             </div>
