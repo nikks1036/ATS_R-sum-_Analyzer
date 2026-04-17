@@ -9,14 +9,20 @@ dotenv.config();
 
 const app = express();
 
+// ✅ FIXED CORS (IMPORTANT)
+app.use(cors({
+  origin: "https://main.d10pc2v5wpdbva.amplifyapp.com",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
 app.use(express.json());
-app.use(cors());
 
 // Routes
 app.use("/auth", authRoutes);
 app.use("/resume", resumeRoutes);
 
-app.get("/", (req, res) => res.send("API Running"));
+app.get("/", (req, res) => res.send("API Running 🚀"));
 
 initDatabase()
   .then(() => {
@@ -24,9 +30,10 @@ initDatabase()
     const server = app.listen(PORT, () => {
       console.log(`Server running on port ${PORT} (SQLite)`);
     });
+
     server.on("error", (err) => {
       if (err.code === 'EADDRINUSE') {
-        console.error(`Port ${PORT} is already in use. Please free the port or set PORT env var to a different port.`);
+        console.error(`Port ${PORT} is already in use.`);
         process.exit(1);
       }
       console.error("Server error:", err);
@@ -34,6 +41,6 @@ initDatabase()
     });
   })
   .catch((err) => {
-    console.error("Unable to start server:", err && err.message);
+    console.error("Unable to start server:", err?.message);
     process.exit(1);
   });
