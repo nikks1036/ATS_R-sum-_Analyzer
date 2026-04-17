@@ -7,6 +7,14 @@ An intelligent full-stack web application that evaluates how well a resume match
 Designed to simulate real-world hiring filters, this tool helps job seekers optimize resumes, improve keyword matching, and increase interview chances.
 
 ### 🌟 Key Features
+#### 🏠 Home Page
+<img src="./home.png" width="100%" />
+
+#### ⚙️ Features Section
+<img src="./features.png" width="100%" />
+
+#### 🔄 Process Flow
+<img src="./process.png" width="100%" />
 
 #### ✨ User Authentication
 
