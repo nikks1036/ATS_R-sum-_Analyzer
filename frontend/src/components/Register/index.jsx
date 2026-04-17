@@ -19,11 +19,11 @@ const Register = () => {
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
-  }
+  };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-  }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -31,49 +31,48 @@ const Register = () => {
     setError("");
     setSuccess("");
 
-  // Use http (backend runs on http) or an env variable for API base URL.
-  // If your backend uses HTTPS with a valid cert, switch to https accordingly.
-  const url = "http://localhost:5000/auth/register";
-    const userDetails = { name, email, password }
+    // ✅ FIXED BACKEND URL
+    const url = "https://ats-r-sum-analyzer.onrender.com/auth/register";
+
+    const userDetails = { name, email, password };
 
     const options = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userDetails),
-    }
+    };
 
     try {
-      const response = await fetch(url, options)
-        let data
-        try {
-          data = await response.json()
-        } catch (e) {
-          data = { message: response.statusText || "No JSON response" }
-        }
+      const response = await fetch(url, options);
 
-        // debug log for easier diagnosis
-        console.log('Register response', response.status, data)
+      let data;
+      try {
+        data = await response.json();
+      } catch (e) {
+        data = { message: response.statusText || "No JSON response" };
+      }
 
-        if (response.ok) {
-          setSuccess(data.message || "Registration successful!");
-          setTimeout(() => {
-            navigate("/login");
-          }, 2000);
-        } else {
-          // backend may return `message` or `error` keys
-          setError(data.message || data.error || "Registration failed");
-        }
+      console.log("Register response", response.status, data);
+
+      if (response.ok) {
+        setSuccess(data.message || "Registration successful!");
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      } else {
+        setError(data.message || data.error || "Registration failed");
+      }
     } catch (err) {
-      setError(err.message || "Network error");
+      setError("Unable to connect to server. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
       <form className="auth-card" onSubmit={handleSubmit}>
-        <h2>Sign In</h2>
+        <h2>Sign Up</h2>
 
         {error && <p className="error-text">{error}</p>}
         {success && <p className="success-text">{success}</p>}
