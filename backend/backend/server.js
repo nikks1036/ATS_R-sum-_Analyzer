@@ -9,24 +9,9 @@ dotenv.config();
 
 const app = express();
 
-// ✅ FIXED CORS (ALLOW MULTIPLE FRONTENDS)
-const allowedOrigins = [
-  "https://main.d10pc2v5wpdbva.amplifyapp.com",
-  "https://main.d2lpl9mcmjfsf.amplifyapp.com"
-];
-
+// ✅ FINAL CORS FIX (NO MORE ERRORS)
 app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like Postman)
-    if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: true,          // allow all origins (fixes AWS + Render issues)
   credentials: true
 }));
 
