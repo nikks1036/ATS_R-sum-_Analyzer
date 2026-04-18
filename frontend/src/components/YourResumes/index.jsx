@@ -21,19 +21,19 @@ const YourResumes = () => {
     }
 
     if (!jobDescription.trim()) {
-      setError("Please paste the job description before analyzing.");
+      setError("Please paste the job description.");
       return;
     }
 
     if (jobDescription.trim().split(/\s+/).length < 20) {
-      setError("Minimum 20 words required in job description.");
+      setError("Minimum 20 words required.");
       return;
     }
 
     const token = localStorage.getItem("token");
 
     if (!token) {
-      setError("You must be logged in.");
+      setError("Login required.");
       return;
     }
 
@@ -44,7 +44,7 @@ const YourResumes = () => {
       setLoading(true);
       setError("");
 
-      // ✅ STEP 1: Upload Resume
+      // Upload
       const uploadResponse = await fetch(
         "https://ats-r-sum-analyzer.onrender.com/resume/upload",
         {
@@ -57,12 +57,12 @@ const YourResumes = () => {
       );
 
       if (!uploadResponse.ok) {
-        throw new Error("Resume upload failed.");
+        throw new Error("Upload failed");
       }
 
       const data = await uploadResponse.json();
 
-      // ✅ STEP 2: Analyze Resume
+      // Analyze
       const analyzeResponse = await fetch(
         "https://ats-r-sum-analyzer.onrender.com/resume/analyze",
         {
@@ -79,7 +79,7 @@ const YourResumes = () => {
       );
 
       if (!analyzeResponse.ok) {
-        throw new Error("Resume analysis failed.");
+        throw new Error("Analysis failed");
       }
 
       const analyzeData = await analyzeResponse.json();
@@ -87,11 +87,18 @@ const YourResumes = () => {
       setShowModal(true);
 
     } catch (err) {
-      setError("Something went wrong. Try again.");
+      setError("Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
+
+  // ✅ FIX: SAFE SUGGESTIONS HANDLING
+  const suggestions = Array.isArray(analysisResult?.suggestions)
+    ? analysisResult.suggestions
+    : analysisResult?.suggestions && typeof analysisResult.suggestions === "object"
+    ? Object.values(analysisResult.suggestions)
+    : [];
 
   return (
     <div className="resume-container">
@@ -126,9 +133,17 @@ const YourResumes = () => {
 
           <h3>Suggestions</h3>
           <ul>
-            {(analysisResult.suggestions || []).map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
+            {suggestions.length > 0 ? (
+              suggestions.map((item, i) => (
+                <li key={i}>
+                  {typeof item === "string"
+                    ? item
+                    : JSON.stringify(item)}
+                </li>
+              ))
+            ) : (
+              <li>No suggestions available</li>
+            )}
           </ul>
 
           <button onClick={() => setShowModal(false)}>Close</button>
