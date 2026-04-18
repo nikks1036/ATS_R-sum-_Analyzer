@@ -2,10 +2,13 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./index.css";
 
+const API_BASE = "https://ats-r-sum-analyzer.onrender.com";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [token, setToken] = useState(localStorage.getItem("token"));
+
+  const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [user, setUser] = useState(() => {
     try {
       const raw = localStorage.getItem("user");
@@ -21,10 +24,12 @@ const Navbar = () => {
     { label: "Contact", path: "/contact" },
   ];
 
+  // 🔁 Sync auth across tabs & events
   useEffect(() => {
     const syncAuth = () => {
       const nextToken = localStorage.getItem("token");
       setToken(nextToken);
+
       try {
         const raw = localStorage.getItem("user");
         setUser(raw ? JSON.parse(raw) : null);
@@ -35,6 +40,7 @@ const Navbar = () => {
 
     window.addEventListener("storage", syncAuth);
     window.addEventListener("auth-changed", syncAuth);
+
     syncAuth();
 
     return () => {
@@ -43,51 +49,65 @@ const Navbar = () => {
     };
   }, []);
 
+  // 🔐 Fetch user info using token
   useEffect(() => {
     if (!token) return;
 
     const fetchMe = async () => {
       try {
-        // ✅ FIXED BACKEND URL
-        const response = await fetch("https://ats-r-sum-analyzer.onrender.com/auth/me", {
-          headers: { Authorization: `Bearer ${token}` }
+        const response = await fetch(`${API_BASE}/auth/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
 
-        if (!response.ok) return;
+        if (!response.ok) {
+          // ❌ Token invalid → logout
+          handleLogout();
+          return;
+        }
+
         const data = await response.json();
 
         if (data?.user) {
           localStorage.setItem("user", JSON.stringify(data.user));
           setUser(data.user);
         }
-      } catch {
-        // silent fail
+      } catch (err) {
+        console.log("Fetch user failed:", err.message);
       }
     };
 
     fetchMe();
   }, [token]);
 
+  // 🚪 Logout
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+
     setToken(null);
     setUser(null);
+
     window.dispatchEvent(new Event("auth-changed"));
     navigate("/login");
   };
 
   return (
     <nav className="navbar">
+      {/* Logo */}
       <div className="navbar-logo" onClick={() => navigate("/")}>
         ✦ ResumeATS
       </div>
 
+      {/* Links */}
       <div className="navbar-links">
         {links.map((link) => (
           <button
             key={link.path}
-            className={`nav-link ${location.pathname === link.path ? "active" : ""}`}
+            className={`nav-link ${
+              location.pathname === link.path ? "active" : ""
+            }`}
             onClick={() => navigate(link.path)}
           >
             {link.label}
@@ -95,23 +115,36 @@ const Navbar = () => {
         ))}
       </div>
 
+      {/* Auth Section */}
       <div className="navbar-actions">
         {token ? (
           <>
             <div className="account-chip">
-              <span className="account-name">{user?.name || "My Account"}</span>
-              <span className="account-email">{user?.email || "Signed in"}</span>
+              <span className="account-name">
+                {user?.name || "My Account"}
+              </span>
+              <span className="account-email">
+                {user?.email || "Logged in"}
+              </span>
             </div>
+
             <button className="nav-btn-ghost" onClick={handleLogout}>
               Logout
             </button>
           </>
         ) : (
           <>
-            <button className="nav-btn-ghost" onClick={() => navigate("/login")}>
+            <button
+              className="nav-btn-ghost"
+              onClick={() => navigate("/login")}
+            >
               Login
             </button>
-            <button className="nav-btn-primary" onClick={() => navigate("/register")}>
+
+            <button
+              className="nav-btn-primary"
+              onClick={() => navigate("/register")}
+            >
               Register
             </button>
           </>
