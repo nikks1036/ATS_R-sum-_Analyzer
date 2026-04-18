@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./index.css";
 
+// ✅ Backend URL (ONLY CHANGE HERE IN FUTURE)
 const API_BASE = "https://ats-r-sum-analyzer.onrender.com";
 
 const YourResumes = () => {
@@ -80,6 +81,8 @@ const YourResumes = () => {
 
       const analyzeData = await analyzeResponse.json();
 
+      console.log("API RESPONSE:", analyzeData); // ✅ Debug log
+
       setAnalysisResult(analyzeData);
       setShowModal(true);
 
@@ -91,7 +94,7 @@ const YourResumes = () => {
     }
   };
 
-  // ✅ SAFE DATA EXTRACTION
+  // ✅ SAFE DATA EXTRACTION (VERY IMPORTANT FIX)
   const report =
     analysisResult?.suggestions?.analysis ||
     analysisResult?.suggestions ||
@@ -147,7 +150,11 @@ const YourResumes = () => {
             <ul>
               {suggestions.length > 0 ? (
                 suggestions.map((item, i) => (
-                  <li key={i}>{item}</li>
+                  <li key={i}>
+                    {typeof item === "string"
+                      ? item
+                      : JSON.stringify(item)}
+                  </li>
                 ))
               ) : (
                 <li>No suggestions available</li>
